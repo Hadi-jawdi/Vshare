@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from .models import UserProfile
+from .models_post_like_fixed import Post
 
 class ProfileEditForm(forms.ModelForm):
     username = forms.CharField(max_length=150, required=True)
@@ -23,3 +24,10 @@ class ProfileEditForm(forms.ModelForm):
             user.save()
             profile.save()
         return profile
+
+class PostForm(forms.ModelForm):
+    content = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'placeholder': 'What\'s on your mind?'}), label='')
+
+    class Meta:
+        model = Post
+        fields = ['content']

@@ -21,4 +21,23 @@
             </div>
         </div>
     </div>
+
+    <h3>Your Posts</h3>
+    <div>
+        {% for post in posts %}
+        <div class="post card mb-3" data-post-id="{{ post.id }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ post.author.username }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ post.created_at|timesince }} ago</h6>
+                <p class="card-text">{{ post.content }}</p>
+<a href="#" class="card-link like-button" data-liked="{{ post.user_has_liked }}">
+                    <i class="fa-regular fa-thumbs-up"></i> Like (<span class="like-count">{{ post.total_likes }}</span>)
+</a>
+                <a href="#" class="card-link"><i class="fa-regular fa-comment"></i> Comment</a>
+            </div>
+        </div>
+        {% empty %}
+        <p>You have not posted anything yet.</p>
+        {% endfor %}
+    </div>
 {% endblock %}

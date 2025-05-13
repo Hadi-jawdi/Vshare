@@ -11,4 +11,5 @@ urlpatterns = [
     path('notifications/', views_post_like.notifications, name='notifications'),
     path('messages/', views_post_like.messages_view, name='messages'),
     path('like/', views_post_like.like_post, name='like_post'),
+    path('create_post/', views_post_like.create_post, name='create_post'),
 ]

@@ -203,31 +203,21 @@ img.rounded-circle:hover {
     text-decoration: underline;
 }
 
-.form-container h2 {
-    text-align: center;
-    margin-bottom: 1.5rem;
+/* New styles for like and comment icons */
+.icon-like, .icon-comment {
+    font-size: 1.4rem;
+    color: #0d6efd;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+    margin-right: 0.3rem;
 }
 
-.form-container form {
-    display: flex;
-    flex-direction: column;
+.icon-like:hover {
+    color: #0a58ca;
+    transform: scale(1.2);
 }
 
-.form-container form p {
-    margin-bottom: 1rem;
-}
-
-.form-container .btn-primary {
-    align-self: center;
-    padding: 0.5rem 2rem;
-    font-weight: 600;
-    border-radius: 25px;
-    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.4);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-.form-container .btn-primary:hover, 
-.form-container .btn-primary:focus {
-    box-shadow: 0 8px 24px rgba(13, 110, 253, 0.6);
-    transform: translateY(-2px);
+.icon-comment:hover {
+    color: #198754;
+    transform: scale(1.2);
 }

@@ -7,7 +7,10 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .models import UserProfile
-from .models_post_like import Post
+from .models_post_like_fixed import Post
+from .forms import PostForm
+from .forms import ProfileEditForm
+
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -23,6 +26,7 @@ class CustomUserCreationForm(UserCreationForm):
             user.save()
         return user
 
+
 @login_required
 def home(request):
     user = request.user
@@ -30,11 +34,30 @@ def home(request):
         profile = user.profile
     except UserProfile.DoesNotExist:
         profile = None
-    posts = Post.objects.all().order_by('-created_at')
+    posts = Post.objects.select_related('author__profile').all().order_by('-created_at')
     # Annotate each post with user_has_liked attribute
     for post in posts:
         post.user_has_liked = post.likes.filter(id=user.id).exists()
-    return render(request, 'index_post_like.html', {'profile': profile, 'posts': posts})
+    post_form = PostForm()
+    return render(request, 'index_post_like.html', {'profile': profile, 'posts': posts, 'post_form': post_form})
+
+
+@login_required
+def create_post(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            messages.success(request, 'Post created successfully.')
+            return redirect('home')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = PostForm()
+    return render(request, 'create_post.html', {'post_form': form})
+
 
 @login_required
 def profile(request):
@@ -43,9 +66,11 @@ def profile(request):
         profile = user.profile
     except UserProfile.DoesNotExist:
         profile = None
-    return render(request, 'profile.html', {'profile': profile})
+    posts = Post.objects.filter(author=user).order_by('-created_at')
+    for post in posts:
+        post.user_has_liked = post.likes.filter(id=user.id).exists()
+    return render(request, 'profile.html', {'profile': profile, 'posts': posts})
 
-from .forms import ProfileEditForm
 
 @login_required
 def profile_edit(request):
@@ -66,6 +91,7 @@ def profile_edit(request):
         form = ProfileEditForm(instance=profile, user=user)
     return render(request, 'profile_edit.html', {'form': form})
 
+
 @login_required
 def like_post(request):
     if request.method == 'POST':
@@ -81,7 +107,6 @@ def like_post(request):
         return JsonResponse({'liked': liked, 'total_likes': post.total_likes()})
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
-# Other existing views remain unchanged
 
 def login(request):
     if request.method == 'POST':
@@ -96,9 +121,11 @@ def login(request):
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
+
 def logout(request):
     auth_logout(request)
     return redirect('login')
+
 
 def register(request):
     if request.method == 'POST':
@@ -113,9 +140,11 @@ def register(request):
         form = CustomUserCreationForm()
     return render(request, 'register.html', {'form': form})
 
+
 @login_required
 def notifications(request):
     return render(request, 'notifications.html')
+
 
 @login_required
 def messages_view(request):
