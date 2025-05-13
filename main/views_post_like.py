@@ -146,6 +146,64 @@ def notifications(request):
     return render(request, 'notifications.html')
 
 
+from .models import UserProfile, Message
+from .forms import PostForm, ProfileEditForm, MessageForm
+from django.db.models import Q
+
 @login_required
 def messages_view(request):
-    return render(request, 'messages.html')
+    user = request.user
+    message_form = MessageForm()
+    selected_user = None
+    messages = []
+
+    # Get list of users who have messaged or been messaged by the current user
+    conversation_users = User.objects.filter(
+        Q(sent_messages__receiver=user) | Q(received_messages__sender=user)
+    ).distinct()
+
+    # Prepare conversation users with latest message preview
+    conversation_previews = []
+    for u in conversation_users:
+        latest_message = Message.objects.filter(
+            (Q(sender=user) & Q(receiver=u)) | (Q(sender=u) & Q(receiver=user))
+        ).order_by('-timestamp').first()
+        conversation_previews.append({
+            'user': u,
+            'latest_message': latest_message,
+        })
+
+    # Get all users except the current user
+    all_users = User.objects.exclude(id=user.id)
+
+    if request.method == 'POST':
+        message_form = MessageForm(request.POST)
+        selected_user_id = request.POST.get('selected_user_id')
+        if selected_user_id:
+            selected_user = User.objects.filter(id=selected_user_id).first()
+        if message_form.is_valid() and selected_user:
+            message = message_form.save(commit=False)
+            message.sender = user
+            message.receiver = selected_user
+            message.save()
+            message_form = MessageForm()  # reset form after sending
+
+    else:
+        selected_user_id = request.GET.get('user')
+        if selected_user_id:
+            selected_user = User.objects.filter(id=selected_user_id).first()
+
+    if selected_user:
+        messages = Message.objects.filter(
+            (Q(sender=user) & Q(receiver=selected_user)) |
+            (Q(sender=selected_user) & Q(receiver=user))
+        ).order_by('timestamp')
+
+    return render(request, 'messages.html', {
+        'conversation_users': conversation_users,
+        'conversation_previews': conversation_previews,
+        'selected_user': selected_user,
+        'messages': messages,
+        'message_form': message_form,
+        'all_users': all_users,
+    })

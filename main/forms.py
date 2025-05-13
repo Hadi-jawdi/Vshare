@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import UserProfile
+from .models import UserProfile, Message
 from .models_post_like_fixed import Post
 
 class ProfileEditForm(forms.ModelForm):
@@ -30,4 +30,11 @@ class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
+        fields = ['content']
+
+class MessageForm(forms.ModelForm):
+    content = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'placeholder': 'Type your message here...'}), label='')
+
+    class Meta:
+        model = Message
         fields = ['content']
