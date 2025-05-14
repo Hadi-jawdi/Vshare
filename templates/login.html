@@ -10,7 +10,6 @@
       <button type="submit" class="btn btn-primary">Login</button>
     </form>
     <p>Or</p>
-    <a href="{% provider_login_url 'google' %}" class="btn btn-danger">Continue with Google</a>
-    <p>Don't have an account? <a href="{% url 'register' %}">Register here</a>.</p>
+    <p class="register-info">Don't have an account? <a href="{% url 'register' %}">Register here</a>.</p>
   </div>
 {% endblock %}

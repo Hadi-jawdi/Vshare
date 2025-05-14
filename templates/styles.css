@@ -324,3 +324,26 @@ form textarea:focus {
     transform: translateY(-3px);
     color: white;
 }
+
+/* New style for register-info paragraph */
+.register-info {
+    font-size: 1rem;
+    color: #f8f9fa;
+    text-align: center;
+    margin-top: 1rem;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    font-weight: 600;
+}
+
+.register-info a {
+    color: #ffc107;
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.register-info a:hover {
+    color: #ffca2c;
+    text-shadow: 0 0 8px #ffca2c;
+    text-decoration: underline;
+}
