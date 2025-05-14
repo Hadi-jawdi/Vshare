@@ -54,7 +54,6 @@ This is a Django-based web application with features including user authenticati
 ## Notes
 - The project uses django-allauth for authentication.
 - Styling includes shadows, gradients, and responsive design.
-- The "Continue with Google" login option has been removed as per recent updates.
 
 ## License
 Specify your license here.
