@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import UserProfile, Message
 from .models_post_like_fixed import Post
+from .models_comment import Comment
 
 class ProfileEditForm(forms.ModelForm):
     username = forms.CharField(max_length=150, required=True)
@@ -37,4 +38,11 @@ class MessageForm(forms.ModelForm):
 
     class Meta:
         model = Message
+        fields = ['content']
+
+class CommentForm(forms.ModelForm):
+    content = forms.CharField(widget=forms.Textarea(attrs={'rows': 2, 'placeholder': 'Write a comment...'}), label='')
+
+    class Meta:
+        model = Comment
         fields = ['content']

@@ -3,8 +3,23 @@
 {% block content %}
     <h2>Notifications</h2>
     <ul class="list-group">
-        <li class="list-group-item">John Doe liked your post.</li>
-        <li class="list-group-item">Jane Smith commented on your photo.</li>
-        <li class="list-group-item">Your password was changed successfully.</li>
+        {% if notifications %}
+            {% for notification in notifications %}
+                <li class="list-group-item{% if not notification.is_read %} list-group-item-info{% endif %}">
+                    <a href="{% url 'post_detail' notification.post.id %}" style="text-decoration:none; color:inherit;">
+                        <strong>{{ notification.sender.username }}</strong>
+                        {% if notification.notification_type == 'like' %}
+                            liked your post
+                        {% elif notification.notification_type == 'comment' %}
+                            commented on your post
+                        {% endif %}
+                        Post #{{ notification.post.id }}
+                        <span class="text-muted float-right">{{ notification.timestamp|date:"Y-m-d H:i" }}</span>
+                    </a>
+                </li>
+            {% endfor %}
+        {% else %}
+            <li class="list-group-item">No notifications.</li>
+        {% endif %}
     </ul>
 {% endblock %}

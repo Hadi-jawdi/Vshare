@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Post Detail - SocialApp{% endblock %}
+{% block content %}
+    <h2>Post by {{ post.author.username }}</h2>
+    <p>{{ post.content }}</p>
+    <p><small>Created at: {{ post.created_at|date:"Y-m-d H:i" }}</small></p>
+
+    <h3>Comments</h3>
+    <ul>
+        {% for comment in comments %}
+            <li>
+                <strong>{{ comment.author.username }}</strong>: {{ comment.content }}
+                <br>
+                <small>{{ comment.created_at|date:"Y-m-d H:i" }}</small>
+            </li>
+        {% empty %}
+            <li>No comments yet.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'home' %}">Back to Home</a>
+{% endblock %}

@@ -9,9 +9,9 @@
                 {% for conv in conversation_previews %}
                     <a href="{% url 'messages' %}?user={{ conv.user.id }}" class="list-group-item list-group-item-action {% if selected_user and conv.user.id == selected_user.id %}active{% endif %}">
                         {% if conv.user.profile.profile_image %}
-                            <img src="{{ conv.user.profile.profile_image.url }}" alt="{{ conv.user.username }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px;">
+                            <img src="{{ conv.user.profile.profile_image.url }}" alt="{{ conv.user.username }}" class="rounded-circle img-fluid" style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px;">
                         {% else %}
-                            <img src="/static/default_profile.png" alt="{{ conv.user.username }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px;">
+                            <img src="/static/default_profile.png" alt="{{ conv.user.username }}" class="rounded-circle img-fluid" style="width: 20px; height: 20px; object-fit: cover; margin-right: 10px;">
                         {% endif %}
                         <strong>{{ conv.user.username }}</strong><br>
                         {% if conv.latest_message %}
@@ -30,9 +30,9 @@
                 {% for u in all_users %}
                     <a href="{% url 'messages' %}?user={{ u.id }}" class="list-group-item list-group-item-action {% if selected_user and u.id == selected_user.id %}active{% endif %}">
                         {% if u.profile.profile_image %}
-                            <img src="{{ u.profile.profile_image.url }}" alt="{{ u.username }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px;">
+                            <img src="{{ u.profile.profile_image.url }}" alt="{{ u.username }}" class="rounded-circle img-fluid" style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px;">
                         {% else %}
-                            <img src="/static/default_profile.png" alt="{{ u.username }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px;">
+                            <img src="/static/default_profile.png" alt="{{ u.username }}" class="rounded-circle img-fluid" style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px;">
                         {% endif %}
                         {{ u.username }}
                     </a>
@@ -43,32 +43,42 @@
         </div>
         <div class="col-md-8">
             {% if selected_user %}
-                <h4>Chat with {{ selected_user.username }}</h4>
-                <div class="messages" style="height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                <h4 class='text-danger text-center m-2'>Chat with {{ selected_user.username }}</h4>
+                <div class="messages padding-3">
                     {% for message in messages %}
-                        <div class="message {% if message.sender == user %}sent{% else %}received{% endif %}" style="margin-bottom: 10px; display: flex; align-items: center;">
+                        <div class="message {% if message.sender == user %}sent{% else %}received{% endif %}">
                             {% if message.sender.profile.profile_image %}
-                                <img src="{{ message.sender.profile.profile_image.url }}" alt="{{ message.sender.username }}" class="rounded-circle" style="width: 30px; height: 30px; object-fit: cover; margin-right: 10px;">
+                                <img src="{{ message.sender.profile.profile_image.url }}" alt="{{ message.sender.username }}" class="rounded-circle img-fluid" style="width: 40px; height: 40px; object-fit: cover;">
                             {% else %}
-                                <img src="/static/default_profile.png" alt="{{ message.sender.username }}" class="rounded-circle" style="width: 30px; height: 30px; object-fit: cover; margin-right: 10px;">
+                                <img src="/static/default_profile.png" alt="{{ message.sender.username }}" class="rounded-circle img-fluid" style="width: 40px; height: 40px; object-fit: cover;">
                             {% endif %}
-                            <div>
-                                <strong>{{ message.sender.username }}:</strong> {{ message.content }}<br>
-                                <small>{{ message.timestamp|date:"M d, Y H:i" }}</small>
+                            <div class="message-content padding-2" style = "margin-left:50px;">
+                                {% if message.sender == user %}
+                                    <strong>You:</strong>
+                                {% else %}
+                                    <strong>{{ message.sender.username }}:</strong>
+                                {% endif %}
+                               
+                                <small class='text-dark'>{{ message.timestamp|date:"M d, Y H:i" }}</small><br>
+                                {{ message.content }}
+                                <br>
+                               
                             </div>
                         </div>
                     {% empty %}
-                        <p>No messages yet.</p>
+                        <h4 class='text-danger'>No messages yet.</h4>
                     {% endfor %}
                 </div>
-                <form method="post" action="{% url 'messages' %}">
-                    {% csrf_token %}
-                    {{ message_form.as_p }}
-                    <input type="hidden" name="selected_user_id" value="{{ selected_user.id }}">
-                    <button type="submit" class="btn btn-primary">Send</button>
-                </form>
+<form method="post" action="{% url 'messages' %}">
+    {% csrf_token %}
+    {{ message_form.as_p|safe }}
+    <input type="hidden" name="selected_user_id" value="{{ selected_user.id }}">
+    <button type="submit" class="btn btn-lg btn-success send-btn">Send</button>
+</form>
             {% else %}
-                <p>Select a user to start chatting.</p>
+                <h3 class='text-danger'>Select a user to start chatting.</h3>
+                <br>
+                <hr>
             {% endif %}
         </div>
     </div>

@@ -13,4 +13,6 @@ urlpatterns = [
     path('messages/', views_post_like.messages_view, name='messages'),
     path('like/', views_post_like.like_post, name='like_post'),
     path('create_post/', views_post_like.create_post, name='create_post'),
+    path('add_comment/', views_post_like.add_comment, name='add_comment'),
+    path('comments/<int:post_id>/', views_post_like.get_comments, name='get_comments'),
 ]
