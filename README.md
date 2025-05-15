@@ -55,5 +55,3 @@ This is a Django-based web application with features including user authenticati
 - The project uses django-allauth for authentication.
 - Styling includes shadows, gradients, and responsive design.
 
-## License
-Specify your license here.
