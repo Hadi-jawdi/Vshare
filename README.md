@@ -30,20 +30,12 @@ This is a Django-based web application with features including user authenticati
    ```
    python manage.py migrate
    ```
-5. Create a superuser (optional):
-   ```
-   python manage.py createsuperuser
-   ```
-6. Run the development server:
+5. Run the development server:
    ```
    python manage.py runserver
    ```
 
-## Usage
-- Access the application at `http://localhost:8000/`.
-- Register a new user or login with existing credentials.
-- Create posts, like and comment on posts.
-- Edit your profile and view notifications and messages.
+
 
 ## Project Structure
 - `main/`: Django app containing models, views, forms, and URLs.
@@ -53,5 +45,5 @@ This is a Django-based web application with features including user authenticati
 
 ## Notes
 - The project uses django-allauth for authentication.
-- Styling includes shadows, gradients, and responsive design.
 
+Hadi Jawdi 
